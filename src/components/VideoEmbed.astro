@@ -1,0 +1,42 @@
+---
+interface Props {
+  url: string;
+  type: 'vimeo' | 'bunny';
+  title?: string;
+}
+
+const { url, type, title = 'Video' } = Astro.props;
+
+function getEmbedUrl(url: string, type: 'vimeo' | 'bunny'): string {
+  if (type === 'vimeo') {
+    // Extract Vimeo ID from various URL formats
+    const match = url.match(/(?:vimeo\.com\/)(\d+)/);
+    const id = match ? match[1] : url;
+    return `https://player.vimeo.com/video/${id}?dnt=1`;
+  }
+
+  if (type === 'bunny') {
+    // BunnyCDN embed URLs - expects full iframe src or video ID
+    // Format: https://iframe.mediadelivery.net/embed/{library_id}/{video_id}
+    if (url.includes('iframe.mediadelivery.net')) {
+      return url;
+    }
+    // If just an ID or path is provided, assume it's the full embed path
+    return url.startsWith('http') ? url : `https://iframe.mediadelivery.net/embed/${url}`;
+  }
+
+  return url;
+}
+
+const embedUrl = getEmbedUrl(url, type);
+---
+
+<div class="video-wrapper">
+  <iframe
+    src={embedUrl}
+    title={title}
+    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+    loading="lazy"
+  ></iframe>
+</div>

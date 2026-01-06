@@ -1,0 +1,41 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const films = await getCollection('films', ({ data }) => !data.draft);
+const sortedFilms = films.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const siteConfig = await getEntry('site', 'config');
+const defaultEmptyRoute = siteConfig?.data.defaultEmptyRoute;
+
+if (sortedFilms.length === 0 && defaultEmptyRoute) {
+  return Astro.redirect(defaultEmptyRoute);
+}
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+---
+
+<Base>
+  <section class="film-list-section">
+    {sortedFilms.length === 0 ? (
+      <p class="empty-state">Cooking up the next small thing.</p>
+      <img src="/images/bridge.webp">
+    ) : (
+      <ul class="film-list">
+        {sortedFilms.map((film) => (
+          <li class="film-item">
+            <a href={`/films/${film.id.replace(/\.md$/, '')}`}>
+              <span class="film-title">{film.data.title}</span>
+              <span class="film-date">{formatDate(film.data.date)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Base>
