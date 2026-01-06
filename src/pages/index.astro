@@ -6,10 +6,9 @@ const films = await getCollection('films', ({ data }) => !data.draft);
 const sortedFilms = films.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const siteConfig = await getEntry('site', 'config');
 const defaultEmptyRoute = siteConfig?.data.defaultEmptyRoute;
+const siteTitle = siteConfig?.data.title ?? 'ursa';
 
-if (sortedFilms.length === 0 && defaultEmptyRoute) {
-  return Astro.redirect(defaultEmptyRoute);
-}
+const shouldRedirect = sortedFilms.length === 0 && defaultEmptyRoute;
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('en-GB', {
@@ -20,22 +19,37 @@ function formatDate(date: Date): string {
 }
 ---
 
-<Base>
-  <section class="film-list-section">
-    {sortedFilms.length === 0 ? (
-      <p class="empty-state">Cooking up the next small thing.</p>
-      <img src="/images/bridge.webp">
-    ) : (
-      <ul class="film-list">
-        {sortedFilms.map((film) => (
-          <li class="film-item">
-            <a href={`/films/${film.id.replace(/\.md$/, '')}`}>
-              <span class="film-title">{film.data.title}</span>
-              <span class="film-date">{formatDate(film.data.date)}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
-  </section>
-</Base>
+{shouldRedirect ? (
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>{siteTitle}</title>
+      <meta http-equiv="refresh" content={`0; url=${defaultEmptyRoute}`} />
+      <script is:inline>
+        {`window.location.replace(${JSON.stringify(defaultEmptyRoute)});`}
+      </script>
+    </head>
+    <body></body>
+  </html>
+) : (
+  <Base>
+    <section class="film-list-section">
+      {sortedFilms.length === 0 ? (
+        <p class="empty-state">Cooking up the next small thing.</p>
+        <img src="/images/bridge.webp">
+      ) : (
+        <ul class="film-list">
+          {sortedFilms.map((film) => (
+            <li class="film-item">
+              <a href={`/films/${film.id.replace(/\.md$/, '')}`}>
+                <span class="film-title">{film.data.title}</span>
+                <span class="film-date">{formatDate(film.data.date)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  </Base>
+)}
