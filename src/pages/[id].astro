@@ -14,7 +14,7 @@ const { page } = Astro.props;
 const { Content } = await render(page);
 ---
 
-<Base title={page.data.title}>
+<Base title={page.data.title} ogImage={`/og/pages/${page.id.replace(/\.md$/, '')}.png`}>
   <article class="page-content">
     {page.data.showTitle ? <h1>{page.data.title}</h1> : null}
     <Content />

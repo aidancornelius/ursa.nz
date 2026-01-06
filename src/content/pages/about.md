@@ -17,4 +17,4 @@ nation. we aspire to work with respect and gratitude for the custodianship of
 Elders past and present, and extend our acknowledgement to custodians of the
 many Countries this site may appear upon.
 
-read more on our values at this [microsite](https://m.tuhoro-bell.com).
+read more on our values at this [microsite](https://manifesto.ursa.nz).

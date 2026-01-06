@@ -5,12 +5,18 @@ import '../styles/global.css';
 
 interface Props {
   title?: string;
+  description?: string;
+  ogImage?: string;
 }
 
 const siteConfig = await getEntry('site', 'config');
 const siteTitle = siteConfig?.data.title ?? 'elwyn';
-const { title } = Astro.props;
+const { title, description, ogImage } = Astro.props;
 const pageTitle = title ? `${title} — ${siteTitle}` : siteTitle;
+const pageDescription = description ?? siteConfig?.data.description ?? '';
+const siteUrl = Astro.site?.toString() ?? 'https://ursa.nz';
+const ogImageUrl = ogImage ? new URL(ogImage, siteUrl).toString() : new URL('/og/site.png', siteUrl).toString();
+const pageUrl = Astro.url?.toString();
 ---
 
 <!DOCTYPE html>
@@ -18,9 +24,18 @@ const pageTitle = title ? `${title} — ${siteTitle}` : siteTitle;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={siteConfig?.data.description} />
+    <meta name="description" content={pageDescription} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{pageTitle}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:url" content={pageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
   </head>
   <body>
     <Nav />

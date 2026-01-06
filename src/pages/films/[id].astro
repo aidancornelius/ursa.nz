@@ -23,7 +23,7 @@ function formatDate(date: Date): string {
 }
 ---
 
-<Base title={film.data.title}>
+<Base title={film.data.title} ogImage={`/og/films/${film.id.replace(/\.md$/, '')}.png`}>
   <article class="film-viewer">
     <header>
       {film.data.showTitle ? <h1>{film.data.title}</h1> : null}
