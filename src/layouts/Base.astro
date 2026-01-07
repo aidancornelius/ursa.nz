@@ -17,6 +17,7 @@ const pageDescription = description ?? siteConfig?.data.description ?? '';
 const siteUrl = Astro.site?.toString() ?? 'https://ursa.nz';
 const ogImageUrl = ogImage ? new URL(ogImage, siteUrl).toString() : new URL('/og/site.png', siteUrl).toString();
 const pageUrl = Astro.url?.toString();
+const year = new Date().getFullYear()
 ---
 
 <!DOCTYPE html>
@@ -42,5 +43,8 @@ const pageUrl = Astro.url?.toString();
     <main class="container">
       <slot />
     </main>
+    <footer>
+      <small>&copy; <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_BLANK">CC BY-NC-SA 4.0</a> {year} Sarah Tuhoro &amp; Aidan Cornelius-Bell</small>
+    </footer>
   </body>
 </html>
