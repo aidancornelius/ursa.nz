@@ -16,7 +16,7 @@ const { Content } = await render(page);
 
 <Base title={page.data.title} ogImage={`/og/pages/${page.id.replace(/\.md$/, '')}.png`}>
   <article class="page-content">
-    {page.data.showTitle ? <h1>{page.data.title}</h1> : null}
+    {page.data.showTitle ? <h1 class="page-title">{page.data.title}</h1> : null}
     <Content />
   </article>
 </Base>
