@@ -1,13 +1,13 @@
 ---
 interface Props {
   url: string;
-  type: 'vimeo' | 'bunny';
+  type: 'vimeo' | 'bunny' | 'frameio';
   title?: string;
 }
 
 const { url, type, title = 'Video' } = Astro.props;
 
-function getEmbedUrl(url: string, type: 'vimeo' | 'bunny'): string {
+function getEmbedUrl(url: string, type: 'vimeo' | 'bunny' | 'frameio'): string {
   if (type === 'vimeo') {
     // Extract Vimeo ID from various URL formats
     const match = url.match(/(?:vimeo\.com\/)(\d+)/);
@@ -25,13 +25,20 @@ function getEmbedUrl(url: string, type: 'vimeo' | 'bunny'): string {
     return url.startsWith('http') ? url : `https://iframe.mediadelivery.net/embed/${url}`;
   }
 
+  if (type === 'frameio') {
+    // Frame.io URLs work directly in iframes
+    // Share/view format: https://next.frame.io/share/{share_id}/view/{asset_id}
+    // Sidebar is hidden via CSS (wider iframe with overflow: hidden on container)
+    return url.startsWith('http') ? url : `https://next.frame.io/${url}`;
+  }
+
   return url;
 }
 
 const embedUrl = getEmbedUrl(url, type);
 ---
 
-<div class="video-wrapper">
+<div class={`video-wrapper ${type === 'frameio' ? 'video-wrapper--frameio' : ''}`}>
   <iframe
     src={embedUrl}
     title={title}

@@ -266,6 +266,23 @@ footer small {
   border: none;
 }
 
+/* Frame.io specific: hide sidebar by making iframe wider */
+.video-wrapper--frameio {
+  overflow: hidden;
+  /* Break out of container but not full width */
+  width: 85vw;
+  max-width: 1400px;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -42.5vw;
+  margin-right: -42.5vw;
+}
+
+.video-wrapper--frameio iframe {
+  width: calc(100% + min(400px, 40vw)); /* Add extra width for Frame.io sidebar */
+}
+
 /* Film List */
 .film-list-section {
   padding: var(--spacing-xl) 0;

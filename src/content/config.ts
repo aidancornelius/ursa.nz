@@ -6,7 +6,7 @@ const films = defineCollection({
     title: z.string(),
     date: z.date(),
     videoUrl: z.string(),
-    videoType: z.enum(['vimeo', 'bunny']),
+    videoType: z.enum(['vimeo', 'bunny', 'frameio']),
     showTitle: z.boolean().default(true),
     draft: z.boolean().default(false),
   }),
